@@ -1,0 +1,20 @@
+<div class="form-container">
+  <h2 class="form-title">Buscar Persona</h2>
+
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Ingrese cédula"
+    [(ngModel)]="cedula"
+  />
+  <button (click)="buscar()" class="btn-search">Buscar</button>
+
+  <div *ngIf="personaEncontrada">
+    <h3>Resultado:</h3>
+    <p><strong>Nombre:</strong> {{ personaEncontrada.name }}</p>
+    <p><strong>Cédula:</strong> {{ personaEncontrada.cedula }}</p>
+    <p><strong>Institución:</strong> {{ personaEncontrada.institucion }}</p>
+  </div>
+
+  <p *ngIf="error" class="error">{{ error }}</p>
+</div>
