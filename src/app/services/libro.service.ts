@@ -10,13 +10,14 @@ import { Observable } from 'rxjs';
 export class LibroService {
 
   private http: HttpClient = inject(HttpClient);
-  private API = environment.apiEndpoint;
+  private API = 'localhost:3000/libros/';
 
   constructor() { }
 
   addLibro(libro: LibroData): Observable<Libro> {
     return this.http.post<Libro>(`${this.API}`, libro);
   }
+
   getLibro(id: Number): Observable<Libro> {
     return this.http.get<Libro>(`${this.API}${id}`);
   }
@@ -28,7 +29,7 @@ export class LibroService {
 }
 
   getLibros(): Observable<Libro[]> {
-    return this.http.get<Libro[]>(`${this.API}all`);
+    return this.http.get<Libro[]>(`${this.API}obtenerLibros`);
   }
 
   actualizarLibro(id: Number, libro: LibroData): Observable<Libro> {

@@ -153,4 +153,10 @@ h1, h2 {
   cursor: pointer;
 }
 
-
+.imagen-libro {
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 1rem;
+}

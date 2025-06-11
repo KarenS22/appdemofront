@@ -31,6 +31,21 @@
             [(ngModel)]="libro.anioPublicacion"
             placeholder="Ingrese el año de publicación del libro"
         />
+        <label for="descripcion">Descripcion:</label>
+        <textarea 
+            id="descripcion"
+            name="descripcion"
+            class="form-control"
+            [(ngModel)]="libro.descripcion"
+            placeholder="Ingrese una breve descripción del libro"> 
+        </textarea>
+        <label for="image">Portada:</label>
+        <input 
+            id="image"
+            name="image"
+            type="file"
+            class="form-control"
+        />
     </div>
     <div class="botones">
   <button 
@@ -68,16 +83,23 @@
                 <thead>
                     <tr>
                         <th>Título</th>
+                        <th>Imagen</th>
                         <th>Autor</th>
                         <th>Año</th>
+                        <th>Descripción</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let libro of libros">
-                        <td>{{ libro.titulo }}</td>
+                        <td style="position: relative; vertical-align: top;">{{ libro.titulo }}</td>
+                        <td>
+                            <img *ngIf="libro.imagenUrl" [src]="libro.imagenUrl" alt="{{ libro.titulo }}" class="imagen-libro">
+                            <span *ngIf="!libro.imagenUrl">Sin imagen</span>
+                        </td>
                         <td>{{ libro.autor }}</td>
                         <td>{{ libro.anioPublicacion }}</td>
+                        <td>{{ libro.descripcion }}</td>
                         <td>
                             <button (click)="editarLibro(libro)" class="btn-save">Editar</button>
                             <button (click)="eliminarLibro(libro.id)" class="btn-cancelar">Eliminar</button>      
