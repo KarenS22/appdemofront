@@ -8,49 +8,56 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-libro',
   imports: [CommonModule, FormsModule],
   templateUrl: './libro.component.html',
-  styleUrl: './libro.component.scss'
+  styleUrl: './libro.component.scss',
 })
 export class LibroComponent {
   // Propiedades
-  libros: Libro[] = [{
-    id: 1,
-    titulo: '1984',
-    autor: 'George Orwell',
-    anioPublicacion: 1949,
-    descripcion: 'Una novela distópica sobre un futuro totalitario.',
-    imagenUrl: 'https://images.cdn1.buscalibre.com/fit-in/360x360/b0/39/b039af065268818b7bd3b0e016f8db65.jpg'
-  }, {
-    id: 2,
-    titulo: 'El Principito',
-    autor: 'Antoine de Saint-Exupéry',
-    anioPublicacion: 1943,
-    descripcion: 'Un cuento filosófico sobre un joven príncipe y su viaje por el universo.',
-    imagenUrl: 'https://images.cdn3.buscalibre.com/fit-in/360x360/f9/32/f9327da5dccd30bb93c1862a354c9b8e.jpg'
-  }];
+  libros: Libro[] = [];
   libro: LibroData = {
-    titulo: '',
+    nombre: '',
     autor: '',
     anioPublicacion: 0,
     descripcion: '',
-    imagen: null
+    imagen: null,
   };
+
   libroId: number | null = null;
   tituloBuscar: string = '';
   mensaje: string = '';
   error: string = '';
-  
+  imagen: File | null = null;
 
-  constructor(private libroService: LibroService) { }
+  constructor(private libroService: LibroService) {}
 
   ngOnInit(): void {
     this.obtenerLibros();
   }
 
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.imagen = event.target.files[0];
+    } else {
+      this.imagen = null;
+    }
+  }
+
   agregarLibro(): void {
-    if (this.libro.titulo.trim() && this.libro.autor.trim() && this.libro.anioPublicacion) {
-      this.libroService.addLibro(this.libro).subscribe(() => {
+    if (
+      this.libro.nombre.trim() &&
+      this.libro.autor.trim() &&
+      this.libro.anioPublicacion &&
+      this.imagen !== null
+    ) {
+      this.libroService.addLibro(this.libro, this.imagen).subscribe(() => {
         console.log('Libro guardado');
-        this.libro = { titulo: '', autor: '', anioPublicacion: 0 , descripcion: '', imagen: null };
+        this.libro = {
+          nombre: '',
+          autor: '',
+          anioPublicacion: 0,
+          descripcion: '',
+          imagen: null,
+        };
+        this.imagen = null;
         this.obtenerLibros();
       });
     }
@@ -66,7 +73,7 @@ export class LibroComponent {
         error: (err) => {
           this.error = 'Error al buscar libros';
           console.error('Error al buscar libros', err);
-        }
+        },
       });
     } else {
       alert('Debe ingresar un título para buscar.');
@@ -82,7 +89,7 @@ export class LibroComponent {
       error: (err) => {
         this.error = 'Error al buscar libros';
         console.error('Error al buscar libros', err);
-      }
+      },
     });
   }
 
@@ -96,60 +103,67 @@ export class LibroComponent {
         error: (err) => {
           this.error = 'Error al eliminar libro';
           console.error('Error al eliminar libro', err);
-        }
+        },
       });
     }
   }
 
   editarLibro(libro: Libro) {
-  this.libro = {
-    titulo: libro.titulo,
-    autor: libro.autor,
-    anioPublicacion: libro.anioPublicacion,
-    descripcion: libro.descripcion || '',
-    imagen: null 
-
-  };
-  this.libroId = libro.id;
-}
-cancelarEdicion(): void {
-  this.libro = { titulo: '', autor: '', anioPublicacion: 0, descripcion: '', imagen: null };
-  this.libroId = null;
-}
-
-
+    this.libro = {
+      nombre: libro.nombre,
+      autor: libro.autor,
+      anioPublicacion: libro.anioPublicacion,
+      descripcion: libro.descripcion || '',
+      imagen: null,
+    };
+    this.libroId = libro.id;
+  }
+  cancelarEdicion(): void {
+    this.libro = {
+      nombre: '',
+      autor: '',
+      anioPublicacion: 0,
+      descripcion: '',
+      imagen: null,
+    };
+    this.libroId = null;
+  }
 
   actualizarLibro() {
     if (this.libroId !== null) {
       this.libroService.actualizarLibro(this.libroId, this.libro).subscribe({
         next: () => {
           console.log('Libro actualizado');
-          this.libro = { titulo: '', autor: '', anioPublicacion: 0, descripcion: '', imagen: null };
+          this.libro = {
+            nombre: '',
+            autor: '',
+            anioPublicacion: 0,
+            descripcion: '',
+            imagen: null,
+          };
           this.libroId = null;
           this.obtenerLibros();
         },
         error: (err) => {
           this.error = 'Error al actualizar libro';
           console.error('Error al actualizar libro', err);
-        }
+        },
       });
     } else {
       alert('Debe seleccionar un libro para actualizar.');
     }
   }
 
-  obtenerLibros(): void{
-    // this.libroService.getLibros().subscribe({
-    //   next: (data) => {
-    //     this.libros = data;
-    //     this.mensaje = 'Libros obtenidos correctamente';
-    //   }, 
-    //   error: (err) => {
-    //     this.error = 'Error al obtener libros';
-    //     console.error('Error al obtener libros', err);
-    //   }
-    // });
-
+  obtenerLibros(): void {
+    this.libroService.getLibros().subscribe({
+      next: (data) => {
+        this.libros = data;
+        this.mensaje = 'Libros obtenidos correctamente';
+      },
+      error: (err) => {
+        this.error = 'Error al obtener libros';
+        console.error('Error al obtener libros', err);
+      },
+    });
   }
-
 }

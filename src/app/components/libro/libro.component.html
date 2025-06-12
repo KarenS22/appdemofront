@@ -1,114 +1,128 @@
 <div class="titulo">
-        <h1>Gestión de Libros</h1> 
+  <h1>Biblioteca Vitual UPS</h1>
 </div>
 
 <div class="contenedor-principal">
-
-<div class="agregar-libro">
-    <h1>{{ libroId !== null ? 'Editar libro' : 'Agrega un libro' }}</h1>
+  <div class="agregar-libro">
+    <h1>{{ libroId !== null ? "Editar libro" : "Agrega un libro" }}</h1>
     <div class="form-group">
-        <label for="titulo">Titulo:</label>
-        <input 
-            id="titulo"
-            name="titulo"
-            class="form-control"
-            [(ngModel)]="libro.titulo"
-            placeholder="Ingrese el nombre del libro"
-        />
-        <label for="autor">Autor:</label>
-        <input 
-            id="autor"
-            name="autor"
-            class="form-control"
-            [(ngModel)]="libro.autor"
-            placeholder="Ingrese el autor del libro"
-        />
-        <label for="anio">Año:</label>
-        <input 
-            id="anio"
-            name="anio"
-            class="form-control"
-            [(ngModel)]="libro.anioPublicacion"
-            placeholder="Ingrese el año de publicación del libro"
-        />
-        <label for="descripcion">Descripcion:</label>
-        <textarea 
-            id="descripcion"
-            name="descripcion"
-            class="form-control"
-            [(ngModel)]="libro.descripcion"
-            placeholder="Ingrese una breve descripción del libro"> 
-        </textarea>
-        <label for="image">Portada:</label>
-        <input 
-            id="image"
-            name="image"
-            type="file"
-            class="form-control"
-        />
+      <label for="titulo">Titulo:</label>
+      <input
+        id="titulo"
+        name="titulo"
+        class="form-control"
+        [(ngModel)]="libro.nombre"
+        placeholder="Ingrese el nombre del libro"
+      />
+      <label for="autor">Autor:</label>
+      <input
+        id="autor"
+        name="autor"
+        class="form-control"
+        [(ngModel)]="libro.autor"
+        placeholder="Ingrese el autor del libro"
+      />
+      <label for="anio">Año:</label>
+      <input
+        id="anio"
+        name="anio"
+        class="form-control"
+        [(ngModel)]="libro.anioPublicacion"
+        placeholder="Ingrese el año de publicación del libro"
+      />
+      <label for="descripcion">Descripcion:</label>
+      <textarea
+        id="descripcion"
+        name="descripcion"
+        class="form-control"
+        [(ngModel)]="libro.descripcion"
+        placeholder="Ingrese una breve descripción del libro"
+      >
+      </textarea>
+      <label for="image">Portada:</label>
+      <input
+        id="image"
+        name="image"
+        type="file"
+        class="form-control"
+        (change)="onFileSelected($event)"
+      />
     </div>
     <div class="botones">
-  <button 
-      type="button" 
-      class="btn-save" 
-      (click)="libroId !== null ? actualizarLibro() : agregarLibro()">
-      {{ libroId !== null ? 'Actualizar libro' : 'Guardar libro' }}
-  </button>
+      <button
+        type="button"
+        class="btn-save"
+        (click)="libroId !== null ? actualizarLibro() : agregarLibro()"
+      >
+        {{ libroId !== null ? "Actualizar libro" : "Guardar libro" }}
+      </button>
 
-  <button 
-    *ngIf="libroId !== null"
-    type="button" 
-    class="btn-cancelar"
-    (click)="cancelarEdicion()">
-    Cancelar edición
-  </button>
-</div>
-
-</div>
-    <div class="buscar-y-tabla">
-        <div class="buscar-libro">
-            <h2>Buscar Libro por Título</h2>
-            <input 
-            type="text" 
-            [(ngModel)]="tituloBuscar" 
-            placeholder="Ingrese el título del libro a buscar" />
-
-            <button (click)="buscarLibroPorTitulo(tituloBuscar)">Buscar</button>
-
-        </div>
-
-        <div class="tabla-libros">
-            <h2 class="form-title">Lista de Libros</h2>
-            <table *ngIf="libros.length >0" class="person-table">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Imagen</th>
-                        <th>Autor</th>
-                        <th>Año</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let libro of libros">
-                        <td style="position: relative; vertical-align: top;">{{ libro.titulo }}</td>
-                        <td>
-                            <img *ngIf="libro.imagenUrl" [src]="libro.imagenUrl" alt="{{ libro.titulo }}" class="imagen-libro">
-                            <span *ngIf="!libro.imagenUrl">Sin imagen</span>
-                        </td>
-                        <td>{{ libro.autor }}</td>
-                        <td>{{ libro.anioPublicacion }}</td>
-                        <td>{{ libro.descripcion }}</td>
-                        <td>
-                            <button (click)="editarLibro(libro)" class="btn-save">Editar</button>
-                            <button (click)="eliminarLibro(libro.id)" class="btn-cancelar">Eliminar</button>      
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div *ngIf="libros.length === 0" class="no-libros">
-                <p>No hay libros disponibles.</p>   
-        </div>
+      <button
+        *ngIf="libroId !== null"
+        type="button"
+        class="btn-cancelar"
+        (click)="cancelarEdicion()"
+      >
+        Cancelar edición
+      </button>
     </div>
+  </div>
+  <div class="buscar-y-tabla">
+    <div class="buscar-libro">
+      <h2>Buscar Libro por Título</h2>
+      <input
+        type="text"
+        [(ngModel)]="tituloBuscar"
+        placeholder="Ingrese el título del libro a buscar"
+      />
+
+      <button (click)="buscarLibroPorTitulo(tituloBuscar)">Buscar</button>
+    </div>
+
+    <div class="tabla-libros">
+      <h2 class="form-title">Lista de Libros</h2>
+      <table *ngIf="libros.length > 0" class="person-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Imagen</th>
+            <th>Autor</th>
+            <th>Año</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let libro of libros">
+            <td style="position: relative; vertical-align: top">
+              {{ libro.nombre }}
+            </td>
+            <td>
+              <img
+                *ngIf="libro.imagenUrl"
+                [src]="libro.imagenUrl"
+                alt="{{ libro.nombre }}"
+                class="imagen-libro"
+              />
+              <span *ngIf="!libro.imagenUrl">Sin imagen</span>
+            </td>
+            <td>{{ libro.autor }}</td>
+            <td>{{ libro.anioPublicacion }}</td>
+            <td>{{ libro.descripcion }}</td>
+            <td>
+              <button (click)="editarLibro(libro)" class="btn-save">
+                Editar
+              </button>
+              <button (click)="eliminarLibro(libro.id)" class="btn-cancelar">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="libros.length === 0" class="no-libros">
+        <p>No hay libros disponibles.</p>
+      </div>
+    </div>
+  </div>
 </div>
