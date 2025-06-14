@@ -20,6 +20,7 @@ export class AppComponent {
     anioPublicacion: 0,
     descripcion: '',
     imagen: null,
+    pdf: null,
   };
 
   libroId: number | null = null;
@@ -27,6 +28,7 @@ export class AppComponent {
   mensaje: string = '';
   error: string = '';
   imagen: File | null = null;
+  pdf: File | null = null;
   previewImage: string | ArrayBuffer | null = null;
 
   constructor(private libroService: LibroService) {}
@@ -35,7 +37,7 @@ export class AppComponent {
     this.obtenerLibros();
   }
 
-  onFileSelected(event: any) {
+  onFileSelectedBook(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       this.imagen = event.target.files[0];
 
@@ -50,6 +52,18 @@ export class AppComponent {
     }
   }
 
+  onFileSelectedPDF(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.pdf = event.target.files[0];
+    } else {
+      this.pdf = null;
+    }
+  }
+
+  abrirPDF(url: string) {
+    window.open(url, '_blank');
+  }
+
   agregarLibro(): void {
     if (
       this.libro.nombre.trim() &&
@@ -57,20 +71,24 @@ export class AppComponent {
       this.libro.anioPublicacion &&
       this.imagen !== null
     ) {
-      this.libroService.addLibro(this.libro, this.imagen).subscribe(() => {
-        console.log('Libro guardado');
-        this.libro = {
-          nombre: '',
-          autor: '',
-          anioPublicacion: 0,
-          descripcion: '',
-          imagen: null,
-        };
-        this.imagen = null;
-        this.previewImage = null;
-        this.libroId = null;
-        this.obtenerLibros();
-      });
+      this.libroService
+        .addLibro(this.libro, this.imagen, this.pdf)
+        .subscribe(() => {
+          console.log('Libro guardado');
+          this.libro = {
+            nombre: '',
+            autor: '',
+            anioPublicacion: 0,
+            descripcion: '',
+            imagen: null,
+            pdf: null,
+          };
+          this.imagen = null;
+          this.previewImage = null;
+          this.libroId = null;
+          this.pdf = null;
+          this.obtenerLibros();
+        });
     }
   }
 
@@ -126,9 +144,11 @@ export class AppComponent {
       anioPublicacion: libro.anioPublicacion,
       descripcion: libro.descripcion || '',
       imagen: null,
+      pdf: null,
     };
     this.libroId = libro.id;
   }
+
   cancelarEdicion(): void {
     this.libro = {
       nombre: '',
@@ -136,9 +156,11 @@ export class AppComponent {
       anioPublicacion: 0,
       descripcion: '',
       imagen: null,
+      pdf: null,
     };
     this.libroId = null;
     this.imagen = null;
+    this.pdf = null;
     this.previewImage = null;
   }
 
@@ -153,10 +175,12 @@ export class AppComponent {
             anioPublicacion: 0,
             descripcion: '',
             imagen: null,
+            pdf: null,
           };
           this.libroId = null;
           this.previewImage = null;
           this.imagen = null;
+          this.pdf = null;
           this.obtenerLibros();
         },
         error: (err) => {

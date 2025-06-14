@@ -8,7 +8,7 @@
 
 <main class="bg-gray-100 min-h-screen text-gray-800 px-20 pt-10">
   <div class="flex gap-8 w-full">
-    <section class="w-3/8 bg-white   shadow-lg p-8 flex flex-col">
+    <section class="w-3/8 bg-white shadow-lg p-8 flex flex-col">
       <h2
         class="text-3xl font-semibold mb-6 border-b-2 border-yellow-500 pb-3 text-center text-yellow-500 tracking-wide"
       >
@@ -46,7 +46,17 @@
           type="file"
           accept="image/*"
           class="rounded-md text-gray-700"
-          (change)="onFileSelected($event)"
+          (change)="onFileSelectedBook($event)"
+        />
+        <label for="pdf" class="font-semibold text-gray-700"
+          >Archivo PDF:</label
+        >
+        <input
+          id="pdf"
+          type="file"
+          accept="application/pdf"
+          class="rounded-md text-gray-700"
+          (change)="onFileSelectedPDF($event)"
         />
 
         <div *ngIf="previewImage" class="mt-4 flex flex-col items-center">
@@ -108,7 +118,6 @@
         </button>
       </div>
 
-
       <div class="overflow-x-auto rounded-lg shadow-inner">
         <table
           *ngIf="libros.length > 0"
@@ -162,6 +171,16 @@
                   class="bg-red-700 hover:bg-red-800 text-white rounded-md px-4 py-1 text-sm shadow-red-600 transition"
                 >
                   Eliminar
+                </button>
+                <button
+                  (click)="abrirPDF(libro.pdfUrl!)"
+                  [ngClass]="{
+                    'bg-green-700 hover:bg-green-800': libro.pdfUrl,
+                    'bg-gray-400 cursor-not-allowed': !libro.pdfUrl
+                  }"
+                  class="bg-green-700 hover:bg-green-800 text-white rounded-md px-4 py-1 text-sm shadow-red-600 transition"
+                >
+                  Ver PDF
                 </button>
               </td>
             </tr>

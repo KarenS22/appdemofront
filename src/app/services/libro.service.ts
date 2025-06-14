@@ -8,14 +8,20 @@ import { Observable } from 'rxjs';
 })
 export class LibroService {
   private http: HttpClient = inject(HttpClient);
-  private API = 'http://34.27.70.206:3000/libros/';
-  // private API = 'http://localhost:3000/libros/';
+  // private API = 'http://34.27.70.206:3000/libros/';
+  private API = 'http://localhost:3000/libros/';
 
   constructor() {}
 
-  addLibro(libro: LibroData, imagen: File): Observable<Libro> {
-    const formData = new FormData();  
+  addLibro(
+    libro: LibroData,
+    imagen: File,
+    pdf: File | null
+  ): Observable<Libro> {
+    const formData = new FormData();
     formData.append('imagen', imagen);
+
+    if (pdf) formData.append('pdf', pdf);
     formData.append('nombre', libro.nombre);
     formData.append('autor', libro.autor);
     formData.append('descripcion', libro.descripcion!);
