@@ -8,7 +8,9 @@ import { Observable } from 'rxjs';
 })
 export class LibroService {
   private http: HttpClient = inject(HttpClient);
-  private API = 'http://34.27.70.206:3000/libros/';
+  private API = '/libros/';
+
+  // private API = 'http://34.27.70.206:3000/libros/';
   // private API = 'http://localhost:3000/libros/';
 
   constructor() {}
