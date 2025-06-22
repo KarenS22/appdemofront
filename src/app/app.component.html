@@ -1,16 +1,18 @@
 <header class="w-screen bg-blue-900 shadow-md">
-  <div class="flex items-center justify-between px-20 py-6">
-    <h1 class="text-4xl font-bold text-white tracking-wide">
+  <div class="flex items-center justify-between px-6 md:px-20 py-6">
+    <h1 class="text-3xl md:text-4xl font-bold text-white tracking-wide">
       Biblioteca Virtual UPS
     </h1>
   </div>
 </header>
 
-<main class="bg-gray-100 min-h-screen text-gray-800 px-20 pt-10">
-  <div class="flex gap-8 w-full">
-    <section class="w-3/8 bg-white shadow-lg p-8 flex flex-col">
+<main class="bg-gray-100 min-h-screen text-gray-800 px-6 md:px-20 pt-10">
+  <div class="flex flex-col md:flex-row gap-8 w-full">
+    <section
+      class="bg-white shadow-lg p-6 md:p-8 flex flex-col h-[825px] md:w-3/8 w-full"
+    >
       <h2
-        class="text-3xl font-semibold mb-6 border-b-2 border-yellow-500 pb-3 text-center text-yellow-500 tracking-wide"
+        class="text-2xl md:text-3xl font-semibold mb-6 border-b-2 border-yellow-500 pb-3 text-center text-yellow-500 tracking-wide"
       >
         {{ libroId !== null ? "Editar libro" : "Agrega un libro" }}
       </h2>
@@ -43,39 +45,17 @@
         <label for="image" class="font-semibold text-gray-700">Portada:</label>
         <input
           id="image"
-          type="file"
-          accept="image/*"
-          class="rounded-md text-gray-700"
-          (change)="onFileSelectedBook($event)"
+          class="rounded-md px-4 py-3 border border-gray-300 bg-gray-50 focus:border-yellow-500 focus:ring-yellow-300 text-gray-800"
+          [(ngModel)]="libro.imagenUrl"
+          placeholder="Ingrese la Url de la imagen"
         />
-        <label for="pdf" class="font-semibold text-gray-700"
-          >Archivo PDF:</label
-        >
-        <input
-          id="pdf"
-          type="file"
-          accept="application/pdf"
-          class="rounded-md text-gray-700"
-          (change)="onFileSelectedPDF($event)"
-        />
-
-        <div *ngIf="previewImage" class="mt-4 flex flex-col items-center">
-          <span class="text-gray-700 font-semibold mb-2"
-            >Previsualización:</span
-          >
-          <img
-            [src]="previewImage"
-            alt="Preview"
-            class="w-44 h-56 object-cover rounded-md border border-gray-300"
-          />
-        </div>
 
         <label for="descripcion" class="font-semibold text-gray-700 mt-6"
           >Descripción:</label
         >
         <textarea
           id="descripcion"
-          class="rounded-md px-4 py-3 border border-gray-300 bg-gray-50 focus:border-yellow-500 focus:ring-yellow-300 text-gray-800 resize-y min-h-[140px]"
+          class="rounded-md px-4 py-3 border border-gray-300 bg-gray-50 focus:border-yellow-500 focus:ring-yellow-300 text-gray-800 resize-none h-32"
           [(ngModel)]="libro.descripcion"
           placeholder="Ingrese una breve descripción"
         ></textarea>
@@ -98,21 +78,26 @@
       </div>
     </section>
 
-    <section class="w-5/8 bg-white shadow-lg p-8 flex flex-col">
-      <div class="flex items-center gap-4 mb-8">
+    <!-- Tabla de libros -->
+    <section
+      class="bg-white shadow-lg p-6 md:p-8 flex flex-col md:w-5/8 w-full"
+    >
+      <div
+        class="flex flex-col md:flex-row items-start md:items-center gap-4 mb-8"
+      >
         <h2
-          class="text-2xl font-bold border-b-2 border-yellow-500 pb-2 flex-grow text-yellow-500 tracking-wide"
+          class="text-xl md:text-2xl font-bold border-b-2 border-yellow-500 pb-2 flex-grow text-yellow-500 tracking-wide"
         >
           Buscar Libro por Título
         </h2>
         <input
           [(ngModel)]="tituloBuscar"
           placeholder="Ingrese el título"
-          class="flex-grow rounded-md px-4 py-3 border border-gray-300 bg-gray-50 focus:border-yellow-500 focus:ring-yellow-300 text-gray-800"
+          class="w-full md:flex-grow rounded-md px-4 py-3 border border-gray-300 bg-gray-50 focus:border-yellow-500 focus:ring-yellow-300 text-gray-800"
         />
         <button
           (click)="buscarLibroPorTitulo(tituloBuscar)"
-          class="bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-md px-6 py-3 shadow-blue-600 transition"
+          class="mt-2 md:mt-0 bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-md px-6 py-3 shadow-blue-600 transition"
         >
           Buscar
         </button>
@@ -125,13 +110,12 @@
         >
           <thead class="bg-blue-900 text-white">
             <tr>
-              <th class="px-6 py-3 text-left">Portada del libro</th>
-              <th class="px-6 py-3 text-left">Título</th>
-
-              <th class="px-6 py-3 text-left">Autor</th>
-              <th class="px-6 py-3 text-left">Año</th>
-              <th class="px-6 py-3 text-left">Descripción</th>
-              <th class="px-6 py-3 text-left">Acciones</th>
+              <th class="px-4 md:px-6 py-3 text-left">Portada del libro</th>
+              <th class="px-4 md:px-6 py-3 text-left">Título</th>
+              <th class="px-4 md:px-6 py-3 text-left">Autor</th>
+              <th class="px-4 md:px-6 py-3 text-left">Año</th>
+              <th class="px-4 md:px-6 py-3 text-left">Descripción</th>
+              <th class="px-4 md:px-6 py-3 text-left">Acciones</th>
             </tr>
           </thead>
           <tbody class="bg-gray-100 text-gray-900">
@@ -139,26 +123,29 @@
               *ngFor="let libro of libros"
               class="border-b border-gray-300 hover:bg-blue-100 transition-colors"
             >
-              <td class="">
+              <td>
                 <img
                   *ngIf="libro.imagenUrl; else noImg"
                   [src]="libro.imagenUrl"
                   alt="{{ libro.nombre }}"
-                  class="w-32 h-42 object-cover rounded-md border border-gray-300"
+                  class="w-24 md:w-32 h-32 md:h-42 object-cover rounded-md border border-gray-300"
                 />
                 <ng-template #noImg>
                   <span class="italic text-gray-400">Sin imagen</span>
                 </ng-template>
               </td>
-              <td class="px-6 py-4 align-top font-semibold">
+              <td class="px-4 md:px-6 py-4 align-top font-semibold">
                 {{ libro.nombre }}
               </td>
-
-              <td class="px-6 py-4 align-top">{{ libro.autor }}</td>
-              <td class="px-6 py-4 align-top">{{ libro.anioPublicacion }}</td>
-              <td class="px-6 py-4 align-top">{{ libro.descripcion }}</td>
+              <td class="px-4 md:px-6 py-4 align-top">{{ libro.autor }}</td>
+              <td class="px-4 md:px-6 py-4 align-top">
+                {{ libro.anioPublicacion }}
+              </td>
+              <td class="px-4 md:px-6 py-4 align-top">
+                {{ libro.descripcion }}
+              </td>
               <td
-                class="px-6 py-4 align-top whitespace-nowrap flex flex-col gap-2"
+                class="px-4 md:px-6 py-4 align-top whitespace-nowrap flex flex-col gap-2"
               >
                 <button
                   (click)="editarLibro(libro)"
@@ -171,16 +158,6 @@
                   class="bg-red-700 hover:bg-red-800 text-white rounded-md px-4 py-1 text-sm shadow-red-600 transition"
                 >
                   Eliminar
-                </button>
-                <button
-                  (click)="abrirPDF(libro.pdfUrl!)"
-                  [ngClass]="{
-                    'bg-green-700 hover:bg-green-800': libro.pdfUrl,
-                    'bg-gray-400 cursor-not-allowed': !libro.pdfUrl
-                  }"
-                  class="bg-green-700 hover:bg-green-800 text-white rounded-md px-4 py-1 text-sm shadow-red-600 transition"
-                >
-                  Ver PDF
                 </button>
               </td>
             </tr>

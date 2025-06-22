@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
-  apiEndpoint: '/libro/'
+  production: false,
+  API: 'http://localhost:3000/api/', 
 };

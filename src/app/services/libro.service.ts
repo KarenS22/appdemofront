@@ -2,33 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Libro, LibroData } from '../models/libros';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LibroService {
   private http: HttpClient = inject(HttpClient);
-  private API = '/libros/';
+  private API = `${environment.API}libros/`;
 
-  // private API = 'http://34.27.70.206:3000/libros/';
-  // private API = 'http://localhost:3000/libros/';
+  constructor() {
+    console.log(this.API);
+  }
 
-  constructor() {}
-
-  addLibro(
-    libro: LibroData,
-    imagen: File,
-    pdf: File | null
-  ): Observable<Libro> {
-    const formData = new FormData();
-    formData.append('imagen', imagen);
-
-    if (pdf) formData.append('pdf', pdf);
-    formData.append('nombre', libro.nombre);
-    formData.append('autor', libro.autor);
-    formData.append('descripcion', libro.descripcion!);
-    formData.append('anioPublicacion', libro.anioPublicacion.toString());
-    return this.http.post<Libro>(this.API, formData);
+  addLibro(libro: LibroData): Observable<Libro> {
+    return this.http.post<Libro>(this.API, libro);
   }
 
   getLibro(id: Number): Observable<Libro> {

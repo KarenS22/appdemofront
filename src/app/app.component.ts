@@ -19,15 +19,14 @@ export class AppComponent {
     autor: '',
     anioPublicacion: 0,
     descripcion: '',
-    imagen: null,
-    pdf: null,
+    imagenUrl: null,
   };
 
   libroId: number | null = null;
   tituloBuscar: string = '';
   mensaje: string = '';
   error: string = '';
-  imagen: File | null = null;
+  imagen: string | null = null;
   pdf: File | null = null;
   previewImage: string | ArrayBuffer | null = null;
 
@@ -37,58 +36,33 @@ export class AppComponent {
     this.obtenerLibros();
   }
 
-  onFileSelectedBook(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.imagen = event.target.files[0];
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.previewImage = e.target?.result ?? null;
-      };
-      reader.readAsDataURL(this.imagen!);
-    } else {
-      this.imagen = null;
-      this.previewImage = null;
-    }
-  }
-
-  onFileSelectedPDF(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.pdf = event.target.files[0];
-    } else {
-      this.pdf = null;
-    }
-  }
-
   abrirPDF(url: string) {
     window.open(url, '_blank');
   }
 
   agregarLibro(): void {
+    
     if (
       this.libro.nombre.trim() &&
       this.libro.autor.trim() &&
       this.libro.anioPublicacion &&
-      this.imagen !== null
+      this.libro.imagenUrl?.trim()
     ) {
-      this.libroService
-        .addLibro(this.libro, this.imagen, this.pdf)
-        .subscribe(() => {
-          console.log('Libro guardado');
-          this.libro = {
-            nombre: '',
-            autor: '',
-            anioPublicacion: 0,
-            descripcion: '',
-            imagen: null,
-            pdf: null,
-          };
-          this.imagen = null;
-          this.previewImage = null;
-          this.libroId = null;
-          this.pdf = null;
-          this.obtenerLibros();
-        });
+      this.libroService.addLibro(this.libro).subscribe(() => {
+        console.log('Libro guardado');
+        this.libro = {
+          nombre: '',
+          autor: '',
+          anioPublicacion: 0,
+          descripcion: '',
+          imagenUrl: '',
+        };
+        this.imagen = null;
+        this.previewImage = null;
+        this.libroId = null;
+        this.pdf = null;
+        this.obtenerLibros();
+      });
     }
   }
 
@@ -110,16 +84,24 @@ export class AppComponent {
   }
 
   buscarLibroPorTitulo(titulo: string) {
-    this.libroService.getLibrosByTitulo(titulo).subscribe({
-      next: (data) => {
-        this.libros = data;
-        this.mensaje = 'Libros encontrados';
-      },
-      error: (err) => {
-        this.error = 'Error al buscar libros';
-        console.error('Error al buscar libros', err);
-      },
-    });
+    if (titulo === '') {
+      console.log('entro aquiii');
+
+      this.obtenerLibros();
+    } else {
+      console.log('entro akkaaa');
+
+      this.libroService.getLibrosByTitulo(titulo).subscribe({
+        next: (data) => {
+          this.libros = data;
+          this.mensaje = 'Libros encontrados';
+        },
+        error: (err) => {
+          this.error = 'Error al buscar libros';
+          console.error('Error al buscar libros', err);
+        },
+      });
+    }
   }
 
   eliminarLibro(id: number) {
@@ -143,8 +125,7 @@ export class AppComponent {
       autor: libro.autor,
       anioPublicacion: libro.anioPublicacion,
       descripcion: libro.descripcion || '',
-      imagen: null,
-      pdf: null,
+      imagenUrl: libro.imagenUrl || '',
     };
     this.libroId = libro.id;
   }
@@ -155,8 +136,7 @@ export class AppComponent {
       autor: '',
       anioPublicacion: 0,
       descripcion: '',
-      imagen: null,
-      pdf: null,
+      imagenUrl: null,
     };
     this.libroId = null;
     this.imagen = null;
@@ -174,8 +154,7 @@ export class AppComponent {
             autor: '',
             anioPublicacion: 0,
             descripcion: '',
-            imagen: null,
-            pdf: null,
+            imagenUrl: null,
           };
           this.libroId = null;
           this.previewImage = null;
